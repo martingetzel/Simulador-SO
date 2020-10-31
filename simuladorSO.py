@@ -26,6 +26,7 @@ controlCarga = 1
 colaListos = []
 j = 0
 
+# SOLO 3 PARTICIONES
 particionesACrear = input('Introduzca el número de particiones a crear: ')
 # Creamos las particiones
 for part in xrange(1,particionesACrear+1):
@@ -52,8 +53,7 @@ for elemento in ltaParticiones:
     print('Fragmentacion interna: '+str(elemento['fragmentacion']))
     print('--------------------------------------------------------------------\n')
 
-# A priori, por simplicidad se restringe la carga como tope a tantos procesos como particiones haya en el sistema. 
-print('NOTA: Al momento solo se pueden cargar como tope, tantos procesos como particiones haya\n')
+
 while(controlCarga != 0):
     ++j
     controlCarga = input('Si desea cargar un proceso presione 1 en caso contrario presione 0 para terminar la carga: ')
@@ -65,7 +65,7 @@ while(controlCarga != 0):
         print('¡¡ERROR!! No hay partición que pueda soportar el proceso actual')
         print('******** RECHAZANDO PROCESO ********\n')
         
-        # Ver porque no anda esta mierda 
+        # Ver porque no anda 
         j=j-1
         continue
 
@@ -86,7 +86,7 @@ while(controlCarga != 0):
 ltaProcesoOrdTA = sorted(ltaProcesos, key = lambda i: (i['TA']))
 print(ltaProcesoOrdTA)    
 # Ordenar los procesos (sjf): por tiempo de arribo y por TI
-subColaListos = 
+subColaListos = sorted(ltaProcesos, key = lambda i: (i['TI'])) #Cola de nuevos procesos
 while (Tcontrol != 0 and colaListos ):
     print('¡¡¡¡Empieza simulación!!!!')
 
