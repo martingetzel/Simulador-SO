@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+import json
+
 # Documentación y ambiente
 
 # Estructura del proceso
@@ -108,7 +110,7 @@ for elemento in ltaParticiones:
 
 #Cargo el SO en la partición 0, como tenemos el SO en la primer parte del arreglo, habría que correr el resto
 #de referencias a las particiones en 1
-
+ltaParticiones[0]['procesoCargado']='Sistema Operativo' #Lo agregué como string nomás, tendría que ver esto después
 
 #Como tenemos particiones fijas, defino maxParticion para usarlo después
 maxParticion=250
