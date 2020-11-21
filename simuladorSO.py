@@ -26,6 +26,53 @@ controlCarga = 1
 colaListos = []
 j = 0
 
+
+#Creamos las particiones que nos pidio la catedra
+#Las particiones están en K, no se si escribirlas como 100*1024 o solamente como 100.
+
+#Particion del Sistema Operativo
+partAux = {
+    'idpart':0,
+    'tamanioPart': 100,
+    'procesoCargado': 'vacio',
+    'fragmentacion': 0
+}
+ltaParticiones.append(partAux)
+
+#Particion Grande
+partAux = {
+    'idpart':1,
+    'tamanioPart': 250,
+    'procesoCargado': 'vacio',
+    'fragmentacion': 0
+}
+ltaParticiones.append(partAux)
+
+#Particion Grande
+partAux = {
+    'idpart':2,
+    'tamanioPart': 120,
+    'procesoCargado': 'vacio',
+    'fragmentacion': 0
+}
+ltaParticiones.append(partAux)
+
+#Particion Grande
+partAux = {
+    'idpart':3,
+    'tamanioPart': 60,
+    'procesoCargado': 'vacio',
+    'fragmentacion': 0
+}
+ltaParticiones.append(partAux)
+
+
+
+
+
+"""
+------------ Comento esto para ver si lo dejamos o no -------------
+
 # SOLO 3 PARTICIONES
 particionesACrear = input('Introduzca el número de particiones a crear: ')
 # Creamos las particiones
@@ -43,9 +90,15 @@ for part in xrange(1,particionesACrear+1):
         'fragmentacion':0
     }
     ltaParticiones.append(partAux)
+"""
+
+
+
+
+
 print('\n')
 print('---------------- Listado de particiones del sistema ----------------\n')    
-  
+
 for elemento in ltaParticiones:
     print('Partición: '+str(elemento['idpart']))
     print('Tamaño de la partición: '+str(elemento['tamanioPart']))
@@ -53,14 +106,26 @@ for elemento in ltaParticiones:
     print('Fragmentacion interna: '+str(elemento['fragmentacion']))
     print('--------------------------------------------------------------------\n')
 
+#Cargo el SO en la partición 0, como tenemos el SO en la primer parte del arreglo, habría que correr el resto
+#de referencias a las particiones en 1
+
+
+#Como tenemos particiones fijas, defino maxParticion para usarlo después
+maxParticion=250
+
+empezando = 1 #Defino una bandera para que muestre un mensaje diferente al inciar
 
 while(controlCarga != 0):
-    ++j
-    controlCarga = input('Si desea cargar un proceso presione 1 en caso contrario presione 0 para terminar la carga: ')
-    if controlCarga == 0:
-        break
+    j=j+1 #Cambie ++j por j=j+1 porque no aumentaba el contador
+    if empezando == 1:
+        print('A continuacion ingrese la informacion correspondiente al primer proceso')
+        empezando = 0
+    else:
+        controlCarga = input('Escriba 0 para finalizar la carga, cualquier otra cosa para continuar: ')
+        if controlCarga == '0': #Puse controlCarga como string porque sino no me lo tomaba y no terminaba nunca el bucle.
+            break
 
-    tamanioProctaux = input('Introduzca tamaño del proceso: ')
+    tamanioProctaux = int(input('Introduzca tamaño del proceso: ')) #No tomaba tamanioProctaux porque entraba como string.
     if(maxParticion < tamanioProctaux):
         print('¡¡ERROR!! No hay partición que pueda soportar el proceso actual')
         print('******** RECHAZANDO PROCESO ********\n')
@@ -68,17 +133,17 @@ while(controlCarga != 0):
         # Ver porque no anda 
         j=j-1
         continue
-
-    TAaux = input('Introduzca el tiempo de arribo del proceso: ')
-    TIaux = input('Introduzca el tiempo de irrupción del proceso: ')
+    #Agrego la conversión a string en TAaux y en TIaux
+    TAaux = int(input('Introduzca el tiempo de arribo del proceso: '))
+    TIaux = int(input('Introduzca el tiempo de irrupción del proceso: '))
 
     # Tiempo minimo que se debe ejecutar el sistema 
     Tcontrol = Tcontrol + TIaux
     procesoAux = {
-    'idproc':j,
-    'TamanioProceso':tamanioProctaux,
-    'TA':TAaux,
-    'TI':TIaux
+        'idproc':j,
+        'TamanioProceso':tamanioProctaux,
+        'TA':TAaux,
+        'TI':TIaux
     }
     ltaProcesos.append(procesoAux) 
 
@@ -95,5 +160,3 @@ while (Tcontrol != 0 and colaListos ):
 # Marcar cuando sale de CPU y que posiocion de memoria se libera
 
 # Indicar cuando no hay mas procesos
-
-
