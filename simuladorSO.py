@@ -25,9 +25,23 @@ Tcontrol = 0
 ltaParticiones = []
 maxParticion = 0
 controlCarga = 1
-colaListos = []
+colaListos = ['Sistema Operativo']
+colaNuevos = []
 j = 0
+T = 
+TCpu = 0
+cantArribadosenTActual = 0
+cpu={
+    'libre':True,
+    'procesoActual':0,
+    'posiocionMemoriaProcesoActual':0,
+}
 
+partCandidata = 0
+fragmentacionInternaCandidata = 9999
+
+# variable de control cola de nuevos
+x = 0
 
 #Creamos las particiones que nos pidio la catedra
 #Las particiones están en K, no se si escribirlas como 100*1024 o solamente como 100.
@@ -36,7 +50,7 @@ j = 0
 partAux = {
     'idpart':0,
     'tamanioPart': 100,
-    'procesoCargado': 'vacio',
+    'procesoCargado': False,
     'fragmentacion': 0
 }
 ltaParticiones.append(partAux)
@@ -45,7 +59,7 @@ ltaParticiones.append(partAux)
 partAux = {
     'idpart':1,
     'tamanioPart': 250,
-    'procesoCargado': 'vacio',
+    'particionLibre': True,
     'fragmentacion': 0
 }
 ltaParticiones.append(partAux)
@@ -54,7 +68,7 @@ ltaParticiones.append(partAux)
 partAux = {
     'idpart':2,
     'tamanioPart': 120,
-    'procesoCargado': 'vacio',
+    'particionLibre': True,
     'fragmentacion': 0
 }
 ltaParticiones.append(partAux)
@@ -63,11 +77,10 @@ ltaParticiones.append(partAux)
 partAux = {
     'idpart':3,
     'tamanioPart': 60,
-    'procesoCargado': 'vacio',
+    'particionLibre': True,
     'fragmentacion': 0
 }
 ltaParticiones.append(partAux)
-
 
 
 
@@ -124,7 +137,7 @@ while(controlCarga != 0):
         empezando = 0
     else:
         controlCarga = input('Escriba 0 para finalizar la carga, cualquier otra cosa para continuar: ')
-        if controlCarga == '0': #Puse controlCarga como string porque sino no me lo tomaba y no terminaba nunca el bucle.
+        if controlCarga == 0:
             break
 
     tamanioProctaux = int(input('Introduzca tamaño del proceso: ')) #No tomaba tamanioProctaux porque entraba como string.
@@ -151,13 +164,78 @@ while(controlCarga != 0):
 
 # Ordenar por tiempo de arribo (TA) --> de aca sacar la cola de arribos a memoria
 ltaProcesoOrdTA = sorted(ltaProcesos, key = lambda i: (i['TA']))
-print(ltaProcesoOrdTA)    
-# Ordenar los procesos (sjf): por tiempo de arribo y por TI
-subColaListos = sorted(ltaProcesos, key = lambda i: (i['TI'])) #Cola de nuevos procesos
-while (Tcontrol != 0 and colaListos ):
-    print('¡¡¡¡Empieza simulación!!!!')
 
-# Ir cargando en CPU
+# Obtengo el ultimo proceso que que va a llegar al sistema
+ultimoProceso = ltaProcesoOrdTA[-1]
+Tcontrol = ultimoProceso['TA'] + ultimoProceso['TI']
+
+print(Tcontrol)    
+
+# Ordenar los procesos (sjf): por tiempo de arribo y por TI
+sjf = sorted(ltaProcesos, key = lambda i: (i['TI'])) #Cola de nuevos procesos
+
+print('Procesos que llegaron antes de empezar')
+print(ltaProcesoOrdTA)
+
+# while (Tcontrol != T and colaListos): volver a poner este cuando ande los arribos
+while (T < Tcontrol):
+    
+    # Recorro lista de procesos creados y verifico si arriban al Sistema
+    for x in xrange(0,len(ltaProcesoOrdTA)):
+        if ltaProcesoOrdTA[x]['TA'] == T:
+            cantArribadosenTActual = cantArribadosenTActual +1 
+
+    # Verifico Arribos en tiempo actual
+
+    if ltaProcesoOrdTA[0]['TA'] == T:
+        for y in xrange(0,cantArribadosenTActual):
+            # Comprobar todos los arribos en este tiempo T
+            if ltaProcesoOrdTA[0]['TA'] <= T:
+                print('Agregar a la cola de nuevos proceso ID: '+ str(ltaProcesoOrdTA[0]['idproc']) )
+                colaNuevos.append(ltaProcesoOrdTA.pop(0))
+
+    # Reinicio cantidad de arribados
+    cantArribadosenTActual = 0
+
+    # Mostrar cola de nuevos (darle un formato pretty)
+    print('Cola Nuevos')
+    print(colaNuevos)
+
+
+    # Hacer arreglo de particiones disponibles
+    # Cargar Particiones
+    for zz in xrange(1,len(ltaParticiones)+1):
+        if ltaParticiones[zz]['procesoCargado']
+        if ltaParticiones[zz]['procesoCargado'] and fragmentacionInternaCandidata > (ltaParticiones[zz]['tamanioPart'] - colaNuevos[0]['TamanioProceso']) and preguntar si puede entrar en esta particion:
+            # obenter fragmentacion que genera el proceso en esta particion
+            fragmentacionInternaCandidata = ltaParticiones[zz]['tamanioPart'] - colaNuevos[0]['TamanioProceso']
+
+            # Obtener ID de la particion candidata
+            partCandidata = ltaParticiones[zz]['idpart']
+
+
+
+    # Cargar en la RAM el proceso
+
+
+    # Preguntar si el proceso en ejecución termino
+    if !cpu['libre']:
+        if  TCpu == 0:
+            desAsignar (mostrar y liberar CPU)
+        else: 
+            TCpu = TCpu -1
+
+    # Preguntar si el CPU esta libre y asignar proceso de ser asi
+    if cpu['libre']:
+        print('CPU LIBRE, se asigna proceso ID: ' + str(colaListos[0]['idproc']---> recordar meterle sjf a estas))
+        TCpu = colaListos[0]['TI']
+    else:
+        TCpu = TCpu = +1
+
+
+
+    # Sumar 1 al reloj del sistema
+    T=T+1
 
 # Marcar cuando sale de CPU y que posiocion de memoria se libera
 
