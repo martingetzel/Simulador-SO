@@ -25,10 +25,10 @@ Tcontrol = 0
 ltaParticiones = []
 maxParticion = 0
 controlCarga = 1
-colaListos = ['Sistema Operativo']
+colaListos = []
 colaNuevos = []
 j = 0
-T = 
+T = 0
 TCpu = 0
 cantArribadosenTActual = 0
 cpu={
@@ -36,10 +36,11 @@ cpu={
     'procesoActual':0,
     'posiocionMemoriaProcesoActual':0,
 }
-
-partCandidata = 0
+condionEntrada = False
+partCandidata = -1
 fragmentacionInternaCandidata = 9999
-
+particionesLibres = 0
+tiempoEstimadoSimulacion = 0
 # variable de control cola de nuevos
 x = 0
 
@@ -60,7 +61,8 @@ partAux = {
     'idpart':1,
     'tamanioPart': 250,
     'particionLibre': True,
-    'fragmentacion': 0
+    'fragmentacion': 0,
+    'idProcesoCargado':0
 }
 ltaParticiones.append(partAux)
 
@@ -69,7 +71,8 @@ partAux = {
     'idpart':2,
     'tamanioPart': 120,
     'particionLibre': True,
-    'fragmentacion': 0
+    'fragmentacion': 0,
+    'idProcesoCargado':0
 }
 ltaParticiones.append(partAux)
 
@@ -78,10 +81,11 @@ partAux = {
     'idpart':3,
     'tamanioPart': 60,
     'particionLibre': True,
-    'fragmentacion': 0
+    'fragmentacion': 0,
+    'idProcesoCargado':0
 }
 ltaParticiones.append(partAux)
-
+particionesLibres = 3
 
 
 
@@ -117,7 +121,6 @@ print('---------------- Listado de particiones del sistema ----------------\n')
 for elemento in ltaParticiones:
     print('Partición: '+str(elemento['idpart']))
     print('Tamaño de la partición: '+str(elemento['tamanioPart']))
-    print('Proceso cargado en partición: '+str(elemento['procesoCargado']))
     print('Fragmentacion interna: '+str(elemento['fragmentacion']))
     print('--------------------------------------------------------------------\n')
 
@@ -133,7 +136,7 @@ empezando = 1 #Defino una bandera para que muestre un mensaje diferente al incia
 while(controlCarga != 0):
     j=j+1 #Cambie ++j por j=j+1 porque no aumentaba el contador
     if empezando == 1:
-        print('A continuacion ingrese la informacion correspondiente al primer proceso')
+        print('A continuación ingrese la información correspondiente al primer proceso')
         empezando = 0
     else:
         controlCarga = input('Escriba 0 para finalizar la carga, cualquier otra cosa para continuar: ')
@@ -151,7 +154,7 @@ while(controlCarga != 0):
     #Agrego la conversión a string en TAaux y en TIaux
     TAaux = int(input('Introduzca el tiempo de arribo del proceso: '))
     TIaux = int(input('Introduzca el tiempo de irrupción del proceso: '))
-
+    tiempoEstimadoSimulacion = tiempoEstimadoSimulacion + TIaux
     # Tiempo minimo que se debe ejecutar el sistema 
     Tcontrol = Tcontrol + TIaux
     procesoAux = {
@@ -173,70 +176,182 @@ print(Tcontrol)
 
 # Ordenar los procesos (sjf): por tiempo de arribo y por TI
 sjf = sorted(ltaProcesos, key = lambda i: (i['TI'])) #Cola de nuevos procesos
+print('\n')
+print('--------------------------------------------------------------------\n')
+print('--------------------------------------------------------------------\n')
+print('--------------------------------------------------------------------\n')
+print('--------------------------------------------------------------------\n')
+print('--------------------------------------------------------------------\n')
+print('--------------------------------------------------------------------\n')
+print('\n')
 
-print('Procesos que llegaron antes de empezar')
+print('Procesos que llegaron antes de empezar\n')
 print(ltaProcesoOrdTA)
+print('\n')
+# # Tiempo de simulacion total
+# tiempoEstimadoSimulacion = tiempoEstimadoSimulacion + ltaProcesoOrdTA[-1]['TA']
+
+print('--------------------------------------------------------------------\n')
+print('- Inico del Simulador\n')
+print('- Tiempo Estimado de Simulacion: '+ str(tiempoEstimadoSimulacion))
+print('--------------------------------------------------------------------\n')
 
 # while (Tcontrol != T and colaListos): volver a poner este cuando ande los arribos
-while (T < Tcontrol):
-    
+while True:
+    print('\n')
+    print('\n')
+    print('------------------------- Reloj de Sistema -------------------------')
+    print('                               T = '+ str(T))
+    print('--------------------------------------------------------------------')
     # Recorro lista de procesos creados y verifico si arriban al Sistema
     for x in xrange(0,len(ltaProcesoOrdTA)):
         if ltaProcesoOrdTA[x]['TA'] == T:
             cantArribadosenTActual = cantArribadosenTActual +1 
 
     # Verifico Arribos en tiempo actual
+    if ltaProcesoOrdTA:
+        if ltaProcesoOrdTA[0]['TA'] == T:
+            condionEntrada = True
+    else:
+        condionEntrada = False
 
-    if ltaProcesoOrdTA[0]['TA'] == T:
+    if condionEntrada:
         for y in xrange(0,cantArribadosenTActual):
             # Comprobar todos los arribos en este tiempo T
             if ltaProcesoOrdTA[0]['TA'] <= T:
-                print('Agregar a la cola de nuevos proceso ID: '+ str(ltaProcesoOrdTA[0]['idproc']) )
+                print('Agregar a la cola de nuevos --> proceso ID: '+ str(ltaProcesoOrdTA[0]['idproc']) )
                 colaNuevos.append(ltaProcesoOrdTA.pop(0))
 
     # Reinicio cantidad de arribados
     cantArribadosenTActual = 0
 
     # Mostrar cola de nuevos (darle un formato pretty)
-    print('Cola Nuevos')
+    print('--------------------------------------------------------------------\n')
+    print('*************************** Cola Nuevos  ***************************')
     print(colaNuevos)
+    print('--------------------------------------------------------------------\n')
+    
+    
 
-
-    # Hacer arreglo de particiones disponibles
     # Cargar Particiones
-    for zz in xrange(1,len(ltaParticiones)+1):
-        if ltaParticiones[zz]['procesoCargado']
-        if ltaParticiones[zz]['procesoCargado'] and fragmentacionInternaCandidata > (ltaParticiones[zz]['tamanioPart'] - colaNuevos[0]['TamanioProceso']) and preguntar si puede entrar en esta particion:
-            # obenter fragmentacion que genera el proceso en esta particion
-            fragmentacionInternaCandidata = ltaParticiones[zz]['tamanioPart'] - colaNuevos[0]['TamanioProceso']
+    if particionesLibres > 0:
+        # Recorro cola de nuevos
+        for procesoColaNuevos in xrange(0,len(colaNuevos)):
+           
+            for z in xrange(1,len(ltaParticiones)):
+                if ltaParticiones[z]['particionLibre'] and (ltaParticiones[z]['tamanioPart'] >= colaNuevos[procesoColaNuevos]['TamanioProceso']) and ((ltaParticiones[z]['tamanioPart'] - colaNuevos[procesoColaNuevos]['TamanioProceso']) >=0):
+                    # obenter fragmentacion que genera el proceso en esta particion
+                    fragmentacionInternaCandidata = ltaParticiones[z]['tamanioPart'] - colaNuevos[procesoColaNuevos]['TamanioProceso']
 
-            # Obtener ID de la particion candidata
-            partCandidata = ltaParticiones[zz]['idpart']
+                    # Obtener ID de la particion candidata
+                    partCandidata = ltaParticiones[z]['idpart']
 
-
-
-    # Cargar en la RAM el proceso
+            if partCandidata != -1:
+                ltaParticiones[partCandidata]['particionLibre'] = False
+                ltaParticiones[partCandidata]['idProcesoCargado'] = colaNuevos[procesoColaNuevos]['idproc']
+                ltaParticiones[partCandidata]['fragmentacion'] = fragmentacionInternaCandidata
+                colaListos.append(colaNuevos.pop(procesoColaNuevos))
+                fragmentacionInternaCandidata = 9999
+                partCandidata = -1
+                particionesLibres = particionesLibres - 1
+            print('Lista de particiones _------------->')
+            print(ltaParticiones)
+    else:
+        print('--------------------------------------------------------------------\n')
+        print('********** No hay particiones disponibles en este momento **********')
+        print('--------------------------------------------------------------------\n')
+        
 
 
     # Preguntar si el proceso en ejecución termino
-    if !cpu['libre']:
+    # if not cpu['libre']:
+    #     if  TCpu == 0:
+    #         # Mostrar proceso que se va
+    #         print('--------------------------------------------------------------------\n')
+    #         print('Proceso que sale de CPU al finalizar su ejecución: '+ str(cpu['procesoActual']))
+    #         print('--------------------------------------------------------------------\n')
+        
+    #         # Liberar CPU
+    #         cpu['libre'] = True
+
+    #         # Desasignar RAM
+    #         for x in xrange(1,len(ltaParticiones)):
+    #             if ltaParticiones[x]['idProcesoCargado'] == cpu['procesoActual']:
+    #                 print('--------------------------------------------------------------------\n')
+    #                 print('----------------Se desaloja de la partición:' + str(ltaParticiones[x]['idpart']) + '----------------')
+    #                 print('--------------------------------------------------------------------\n')
+    #                 ltaParticiones[x]['particionLibre'] = True
+    #                 ltaParticiones[x]['idProcesoCargado'] = 0
+    #                 ltaParticiones[x]['fragmentacion'] = 0
+    #                 particionesLibres = particionesLibres + 1
+    #                 print('--------------------------------------------------------------------\n')
+    #     else: 
+    #         TCpu = TCpu -1
+    #         tiempoEstimadoSimulacion = tiempoEstimadoSimulacion -1
+    #         print('--------------------------------------------------------------------\n')
+    #         print('********** Proceso ejecutandose en CPU **********')
+    #         print('- ID Proceso en CPU: ' + str(cpu['procesoActual']))
+    #         print('- Tiempo restante en CPU: ' + str(TCpu))
+    #         print('--------------------------------------------------------------------\n')
+
+
+###########################################################################################################################
+
+    if not cpu['libre']:
+        TCpu = TCpu -1
+        tiempoEstimadoSimulacion = tiempoEstimadoSimulacion -1
+        print('--------------------------------------------------------------------\n')
+        print('******************* Proceso ejecutandose en CPU *******************')
+        print('- ID Proceso en CPU: ' + str(cpu['procesoActual']))
+        print('- Tiempo restante en CPU: ' + str(TCpu))
+        print('\n')
+        print('--------------------------------------------------------------------\n')
+        
         if  TCpu == 0:
-            desAsignar (mostrar y liberar CPU)
-        else: 
-            TCpu = TCpu -1
+            # Mostrar proceso que se va
+            print('--------------------------------------------------------------------\n')
+            print('Proceso que sale de CPU al finalizar su ejecución: '+ str(cpu['procesoActual']))
+            print('--------------------------------------------------------------------\n')
+            # Liberar CPU
+            cpu['libre'] = True
+            # Desasignar RAM
+            for x in xrange(1,len(ltaParticiones)):
+                if ltaParticiones[x]['idProcesoCargado'] == cpu['procesoActual']:
+                    print('\n')
+                    print('----------------- Se desaloja de la partición:' + str(ltaParticiones[x]['idpart']) + ' --------------------')
+                    print('--------------------------------------------------------------------\n')
+                    ltaParticiones[x]['particionLibre'] = True
+                    ltaParticiones[x]['idProcesoCargado'] = 0
+                    ltaParticiones[x]['fragmentacion'] = 0
+                    particionesLibres = particionesLibres + 1
+                    print('--------------------------------------------------------------------\n')
+
+
 
     # Preguntar si el CPU esta libre y asignar proceso de ser asi
-    if cpu['libre']:
-        print('CPU LIBRE, se asigna proceso ID: ' + str(colaListos[0]['idproc']---> recordar meterle sjf a estas))
-        TCpu = colaListos[0]['TI']
-    else:
-        TCpu = TCpu = +1
+    print('--------------------------- COLA LISTOS ----------------------------')
 
+    print(colaListos)
+    colaListos = sorted(colaListos, key = lambda i: (i['TI']))
+
+    if cpu['libre'] and colaListos:
+        print('--------------------------------------------------------------------\n')
+        print('------------- CPU LIBRE, se asigna el proceso ID: ' + str(colaListos[0]['idproc']) + ' ----------------')
+        print('--------------------------------------------------------------------\n')
+        
+        TCpu = colaListos[0]['TI']
+        cpu['procesoActual'] = colaListos[0]['idproc']
+        cpu['libre'] = False
+        colaListos.pop(0)
 
 
     # Sumar 1 al reloj del sistema
     T=T+1
+    if tiempoEstimadoSimulacion == 0:
+        break
 
-# Marcar cuando sale de CPU y que posiocion de memoria se libera
-
-# Indicar cuando no hay mas procesos
+print('\n')
+print('¡¡¡Simulación Terminada!!!\n')
+print('Gracias por usar el simulador planificación de procesos y gestión de colas\n')
+print('Grupo 3, Sistemas Operativos\n')
+print('UTN - FRRe - 2020\n')
