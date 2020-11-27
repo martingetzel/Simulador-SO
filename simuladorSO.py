@@ -143,20 +143,20 @@ while(controlCarga != 0):
         if controlCarga == 0:
             break
 
+    print('\n')
+    print('\n')
     tamanioProctaux = int(input('Introduzca tamaño del proceso: ')) #No tomaba tamanioProctaux porque entraba como string.
     if(maxParticion < tamanioProctaux):
         print('¡¡ERROR!! No hay partición que pueda soportar el proceso actual')
         print('******** RECHAZANDO PROCESO ********\n')
-        
-        # Ver porque no anda 
         j=j-1
         continue
     #Agrego la conversión a string en TAaux y en TIaux
     TAaux = int(input('Introduzca el tiempo de arribo del proceso: '))
     TIaux = int(input('Introduzca el tiempo de irrupción del proceso: '))
-    tiempoEstimadoSimulacion = tiempoEstimadoSimulacion + TIaux
-    # Tiempo minimo que se debe ejecutar el sistema 
-    Tcontrol = Tcontrol + TIaux
+    
+    # Tiempo minimo que se debe ejecutar el sistema
+    tiempoEstimadoSimulacion = tiempoEstimadoSimulacion + TIaux 
     procesoAux = {
         'idproc':j,
         'TamanioProceso':tamanioProctaux,
@@ -196,7 +196,7 @@ print('- Inico del Simulador\n')
 print('- Tiempo Estimado de Simulacion: '+ str(tiempoEstimadoSimulacion))
 print('--------------------------------------------------------------------\n')
 
-# while (Tcontrol != T and colaListos): volver a poner este cuando ande los arribos
+# Implementacion de ciclo iterativo REPETIR en Python (la condicion esta en la linea xxxx)
 while True:
     print('\n')
     print('\n')
@@ -228,10 +228,19 @@ while True:
     # Mostrar cola de nuevos (darle un formato pretty)
     print('--------------------------------------------------------------------\n')
     print('*************************** Cola Nuevos  ***************************')
-    print(colaNuevos)
-    print('--------------------------------------------------------------------\n')
-    
-    
+    if colaNuevos:
+        # Mostramos cola de nuevos
+        for i in xrange(0,len(colaNuevos)):
+            print('\n')
+            print('Proceso ID: '+ str(colaNuevos[i]['idproc']))
+            print('Tamaño del proceso: '+ str(colaNuevos[i]['TamanioProceso']))
+            print('Tiempo de Arribos: '+ str(colaNuevos[i]['TA']))
+            print('Tiempo de Irrupción: '+ str(colaNuevos[i]['TI']))
+
+        
+    else:
+        print('- Cola de Nuevos: VACIA ')
+        print('--------------------------------------------------------------------\n')   
 
     # Cargar Particiones
     if particionesLibres > 0:
@@ -254,48 +263,21 @@ while True:
                 fragmentacionInternaCandidata = 9999
                 partCandidata = -1
                 particionesLibres = particionesLibres - 1
-            print('Lista de particiones _------------->')
-            print(ltaParticiones)
+
+            # Mostramos la lista de particiones
+            print('\n')
+            print('---------------------- Lista de Particiones ------------------------\n')
+            for i in xrange(1,len(ltaParticiones)):
+                print('\n')
+                print('Partición ID: '+ str(ltaParticiones[i]['idpart']))
+                print('Tamaño de la partición: '+ str(ltaParticiones[i]['tamanioPart']))
+                print('Fragmentacion Interna: '+ str(ltaParticiones[i]['fragmentacion']))
+                print('ID Proceso Cargado: '+ str(ltaParticiones[i]['idProcesoCargado']))
+            print('--------------------------------------------------------------------\n')
     else:
         print('--------------------------------------------------------------------\n')
         print('********** No hay particiones disponibles en este momento **********')
         print('--------------------------------------------------------------------\n')
-        
-
-
-    # Preguntar si el proceso en ejecución termino
-    # if not cpu['libre']:
-    #     if  TCpu == 0:
-    #         # Mostrar proceso que se va
-    #         print('--------------------------------------------------------------------\n')
-    #         print('Proceso que sale de CPU al finalizar su ejecución: '+ str(cpu['procesoActual']))
-    #         print('--------------------------------------------------------------------\n')
-        
-    #         # Liberar CPU
-    #         cpu['libre'] = True
-
-    #         # Desasignar RAM
-    #         for x in xrange(1,len(ltaParticiones)):
-    #             if ltaParticiones[x]['idProcesoCargado'] == cpu['procesoActual']:
-    #                 print('--------------------------------------------------------------------\n')
-    #                 print('----------------Se desaloja de la partición:' + str(ltaParticiones[x]['idpart']) + '----------------')
-    #                 print('--------------------------------------------------------------------\n')
-    #                 ltaParticiones[x]['particionLibre'] = True
-    #                 ltaParticiones[x]['idProcesoCargado'] = 0
-    #                 ltaParticiones[x]['fragmentacion'] = 0
-    #                 particionesLibres = particionesLibres + 1
-    #                 print('--------------------------------------------------------------------\n')
-    #     else: 
-    #         TCpu = TCpu -1
-    #         tiempoEstimadoSimulacion = tiempoEstimadoSimulacion -1
-    #         print('--------------------------------------------------------------------\n')
-    #         print('********** Proceso ejecutandose en CPU **********')
-    #         print('- ID Proceso en CPU: ' + str(cpu['procesoActual']))
-    #         print('- Tiempo restante en CPU: ' + str(TCpu))
-    #         print('--------------------------------------------------------------------\n')
-
-
-###########################################################################################################################
 
     if not cpu['libre']:
         TCpu = TCpu -1
@@ -329,10 +311,20 @@ while True:
 
 
     # Preguntar si el CPU esta libre y asignar proceso de ser asi
+    print('\n')
     print('--------------------------- COLA LISTOS ----------------------------')
-
-    print(colaListos)
-    colaListos = sorted(colaListos, key = lambda i: (i['TI']))
+    if colaListos:
+        # mostrar cola de listos
+        colaListos = sorted(colaListos, key = lambda i: (i['TI'])) #Ordenar SJF
+        for i in xrange(0,len(colaListos)):
+            print('\n')
+            print('Proceso ID: '+ str(colaListos[i]['idproc']))
+            print('Tamaño del proceso: '+ str(colaListos[i]['TamanioProceso']))
+            print('Tiempo de Arribos: '+ str(colaListos[i]['TA']))
+            print('Tiempo de Irrupción: '+ str(colaListos[i]['TI']))
+    else:
+        print('- Cola de Listos: VACIA')
+        print('--------------------------------------------------------------------\n')
 
     if cpu['libre'] and colaListos:
         print('--------------------------------------------------------------------\n')
@@ -344,14 +336,24 @@ while True:
         cpu['libre'] = False
         colaListos.pop(0)
 
+    if cpu['libre'] and not colaListos:
+        print('--------------------------------------------------------------------\n')
+        print('---------------- CPU LIBRE - Cola de Listos Vacia ------------------')
+        print('--------------------------------------------------------------------\n')
 
     # Sumar 1 al reloj del sistema
     T=T+1
     if tiempoEstimadoSimulacion == 0:
         break
-
 print('\n')
-print('¡¡¡Simulación Terminada!!!\n')
-print('Gracias por usar el simulador planificación de procesos y gestión de colas\n')
-print('Grupo 3, Sistemas Operativos\n')
-print('UTN - FRRe - 2020\n')
+print('\n')
+print('**********************************************************************************\n')
+print('**********************************************************************************\n')
+print('*                                                                                *\n')
+print('*                          ¡¡¡Simulación Terminada!!!                            *\n')
+print('*   Gracias por usar el simulador planificación de procesos y gestión de colas   *\n')
+print('*                        Grupo 3, Sistemas Operativos                            *\n')
+print('*                              UTN - FRRe - 2020                                 *\n')
+print('*                                                                                *\n')
+print('**********************************************************************************\n')
+print('**********************************************************************************\n')
